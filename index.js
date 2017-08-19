@@ -1,9 +1,12 @@
-function rowsToObjs(rows, removeDollor) {
+function rowsToObjs(rows, removeDollor, splitKey) {
+  if(!splitKey){
+    splitKey = '_'
+  }
   var retJSON = null
   rows.forEach((row) => {
     var rowJson = {}
     Object.keys(row).forEach(key => {
-      var splitted = key.split('_')
+      var splitted = key.split(splitKey)
       var val = row[key]
       var atLevel = rowJson
       splitted.forEach((level, idx) => {

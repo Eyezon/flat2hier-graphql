@@ -1,9 +1,13 @@
 {
   "name": "flat2hier-graphql",
   "description": "Transform flat sql query result array into a hierarchical graphql like response",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "main": "index.js",
   "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Eyezon/flat2hier-graphql"
+  },
   "scripts": {
     "lint": "standard",
     "fix": "standard --fix",
