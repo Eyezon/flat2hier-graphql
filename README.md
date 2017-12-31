@@ -2,10 +2,13 @@
 
 Folds your JOINNED sql rows into a hierarchy of objects suitable for graphql response.
 
+<img src="logo.png" width="150px" alt="logo">
+
 ## Get started
 
 ```bash
-npm install --save flat2hier-graphql
+# Directly install from github
+npm install --save git+https://github.com/Eyezon/flat2hier-graphql
 ```
 
 ## How it works
@@ -21,55 +24,6 @@ It takes an array of object and groups the objects by the follwing rules/convent
   + If level_key starts with `$` and it has a child level key `id` it uses that id for subsequest row to insert in that same object in the array
 
 ## Usage
-
-Pass your row result renamed using `_` for indention and pass it to `flat2hier`
-
-_P.S_ When using sql as to rename column u may quote them as some database like postgres otherwise doesn't preserve case.
-
-```javascript
-const flat2hier = require('flat2hier')
-const sqlRow = [ {
-    $query_id: '1',
-    $query_firstName: 'Ramu',
-    $query_lastName: 'Pal',
-    $query_$assignedCars_id: '1',
-    $query_$assignedCars_name: 'Toyota XI',
-    $query_$assignedCars_licenseNo: 'WB XX XXXX'
-}, {
-    $query_id: '1',
-    $query_firstName: 'Ramu',
-    $query_lastName: 'Pal',
-    $query_$assignedCars_id: '2',
-    $query_$assignedCars_name: 'Toyota XII',
-    $query_$assignedCars_licenseNo: 'HR XX XXXX'
-}, {
-    $query_id: '2',
-    $query_firstName: 'Sanatan',
-    $query_lastName: 'Sarkar',
-    $query_$assignedCars_id: '4',
-    $query_$assignedCars_name: 'Seadan V5',
-    $query_$assignedCars_licenseNo: 'WB XXX XXXX'
-}]
-
-flat2hier(sqlRow)
-/* Returns: (note pass true as 2nd param to flat2hier if u want to remove the leading $ sign)
-{ '$query':
-   [ { id: '1',
-       firstName: 'Ramu',
-       lastName: 'Pal',
-       '$assignedCars':
-        [ { id: '1', name: 'Toyota XI', licenseNo: 'WB XX XXXX' },
-          { id: '2', name: 'Toyota XII', licenseNo: 'HR XX XXXX' } ] },
-     { id: '2',
-       firstName: 'Sanatan',
-       lastName: 'Sarkar',
-       '$assignedCars': [ { id: '4', name: 'Seadan V5', licenseNo: 'WB XXX XXXX' } ] } ] }
-*/
-```
-
-
-
-# Examples
 
 Suppose we have two tables
 
@@ -196,7 +150,50 @@ return database.queryAsync(`
 **For `flat2hier` 's usage see `example/graphql.js` file**
 
 
-### Running included examples
+# Examples
+
+
+```javascript
+const flat2hier = require('flat2hier')
+const sqlRow = [ {
+    $query_id: '13',
+    $query_queryMetadata_id: '18',
+    $query_queryMetadata_title: 'Title 1',
+    $query_queryMetadata_sender_id: 's1',
+    $query_queryMetadata_sender_name: 'debjyoti-in',
+    $query_queryMetadata_sender_profileImageUrl: 'https://ppics.in/debjyoti-in-155x155.png',
+    $query_queryMetadata_sender_phoneNo: '+91 xxxxxxxxxx',
+    $query_queryMetadata_createdAt: 1502110354464,
+    $query_queryMetadata_expiresAt: 1502110754464,
+    $query_queryMetadata_lastChatAt: '13'
+}]
+
+flat2hier(sqlRow)
+/* Returns: (note pass true as 2nd param to flat2hier if u want to remove the leading $ sign)
+{
+  "$query": [
+    {
+      "id": "13",
+      "queryMetadata": {
+        "id": "18",
+        "title": "Title 1",
+        "sender": {
+          "id": "s1",
+          "name": "debjyoti-in",
+          "profileImageUrl": "https://ppics.in/debjyoti-in-155x155.png",
+          "phoneNo": "+91 xxxxxxxxxx"
+        },
+        "createdAt": 1502110354464,
+        "expiresAt": 1502110754464,
+        "lastChatAt": "13"
+      }
+    }
+  ]
+}
+*/
+```
+
+### Running examples
 
 + Clone this repository
 + Install dev dependencies
